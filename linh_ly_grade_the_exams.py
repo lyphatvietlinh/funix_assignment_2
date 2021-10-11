@@ -1,13 +1,16 @@
+# --------------------------------------------------------------------
+# FUNIX ASSIGNMENT 2
+# --------------------------------------------------------------------
 import numpy as np
 
 
 # TASK 1
-def checkfile(filename):
+def check_file(filename: str):
     """
     Checks if the file exists before doing further works.
 
     :param filename: file to check
-    :return: boolean on file existence
+    :return: true/false on file existence
     """
     print("\n" + "FILE CHECKING".center(30, "-") + "\n")
     try:
@@ -20,29 +23,29 @@ def checkfile(filename):
 
 
 # TASK 2
-def check_student_no(string):
+def check_student_code(code: str):
     """
     To check if a student number/code is valid
 
-    :param string: student code to check
-    :return: boolean
+    :param code: student code to check
+    :return: true if the code is valid, false if not
     """
-    if string[0] != "N":
+    if code[0] != "N":
         return False
-    if len(string) != 9:
+    if len(code) != 9:
         return False
-    for char in string[1:]:
+    for char in code[1:]:
         if not char.isdigit():
             return False
     return True
 
 
-def analyze(filename):
+def analyze(filename: str):
     """
     Analyze the file and detect invalid lines before doing other works.
 
     :param filename: file to check
-    :return: Doesn't return anything yet
+    :return: dictionary of student_code:graded_score
     """
     print("\n" + "ANALYSING!".center(30, "-") + "\n")
     with open(filename, 'r') as file_object:
@@ -52,9 +55,10 @@ def analyze(filename):
         for line in file_object:
             result = line.strip().split(",")
             if len(result) != 26:
-                print("Invalid data - Incorrect number of answers ({})".format(len(result)-1))
+                print("Invalid data - Incorrect number of answers ({})"
+                      .format(len(result)-1))
                 print(result)
-            elif not check_student_no(result[0]):
+            elif not check_student_code(result[0]):
                 print("Invalid data - Incorrect student code")
                 print(result)
             else:
@@ -64,14 +68,17 @@ def analyze(filename):
         if valid_lines == total_lines:
             print("No errors found!")
         print("\n" + "REPORTING!".center(30, "-") + "\n")
-        print("Total lines of data:".ljust(30, "-") + " {}".format(total_lines))
-        print("Total valid lines of data:".ljust(30, "-") + " {}".format(valid_lines))
-        print("Total invalid lines of data:".ljust(30, "-") + " {}".format(total_lines - valid_lines))
+        print("Total lines of data:".ljust(30, "-") + " {}"
+              .format(total_lines))
+        print("Total valid lines of data:".ljust(30, "-") + " {}"
+              .format(valid_lines))
+        print("Total invalid lines of data:".ljust(30, "-") + " {}"
+              .format(total_lines - valid_lines))
     return assignments_dict
 
 
 # TASK 3
-def grade(assignments_dict):
+def grade(assignments_dict: dict):
     """
     Grade the input assignment dictionary
 
@@ -80,7 +87,8 @@ def grade(assignments_dict):
     :return: a dict contains key = student code, value = score
     """
     print("\n" + "GRADING!".center(30, "-") + "\n")
-    answer_key = "B,A,D,D,C,B,D,A,C,C,D,B,A,B,A,C,B,D,A,C,A,A,B,D,D".strip().split(",")
+    answer_key = "B,A,D,D,C,B,D,A,C,C,D,B,A,B,A,C,B,D,A,C,A,A,B,D,D"\
+        .strip().split(",")
     for student, result in assignments_dict.items():
         score = 0
         for i in range(len(result)):
@@ -92,23 +100,28 @@ def grade(assignments_dict):
                 score += -1
         assignments_dict[student] = score
     score = np.array(list(assignments_dict.values()))
-    print("Number of students graded:".ljust(30, "-") + " {}".format(len(assignments_dict)))
-    print("Average score:".ljust(30, "-") + " {}".format(score.mean()))
-    print("Highest score:".ljust(30, "-") + " {}".format(score.max()))
-    print("Lowest score:".ljust(30, "-") + " {}".format(score.min()))
-    print("Range of scores:".ljust(30, "-") + " {}".format(score.max() - score.min()))
-    print("Median value:".ljust(30, "-") + " {}".format(np.median(score)))
+    print("Number of students graded:".ljust(30, "-")
+          + " {}".format(len(assignments_dict)))
+    print("Average score:".ljust(30, "-")
+          + " {:.2f}".format(score.mean()))
+    print("Highest score:".ljust(30, "-")
+          + " {}".format(score.max()))
+    print("Lowest score:".ljust(30, "-")
+          + " {}".format(score.min()))
+    print("Range of scores:".ljust(30, "-")
+          + " {}".format(score.max() - score.min()))
+    print("Median value:".ljust(30, "-")
+          + " {:.2f}".format(np.median(score)))
     return assignments_dict
 
 
 # TASK 4
-def write_file(scores_dict, filename):
+def write_file(scores_dict: dict, filename: str):
     """
     Writes result scores into a file
 
     :param scores_dict: dict contains student code and score as key:value
     :param filename: original name of the file that was used for grading
-    :return:
     """
     print("\n" + "EXPORTING RESULTS!".center(30, "-") + "\n")
     filename = filename.replace(".txt", "_grades.txt")
@@ -123,7 +136,7 @@ def main():
     To loop through each class file
     """
     file = input("Input your filename: ")
-    if checkfile(file):
+    if check_file(file):
         assignments = analyze(file)
         scores = grade(assignments)
         write_file(scores, file)
