@@ -9,7 +9,7 @@ def checkfile(filename):
     :param filename: file to check
     :return: boolean on file existence
     """
-    print("FILE CHECKING".center(30, "-"))
+    print("\n" + "FILE CHECKING".center(30, "-") + "\n")
     try:
         open(filename)
         print("File '{}' founded!".format(filename))
@@ -20,6 +20,21 @@ def checkfile(filename):
 
 
 # TASK 2
+def check_student_no(string):
+    """
+    To check if a student number/code is valid
+
+    :param string: student code to check
+    :return: boolean
+    """
+    if string[0] != "N":
+        return False
+    for char in string[1:]:
+        if not char.isdigit():
+            return False
+    return True
+
+
 def analyze(filename):
     """
     Analyze the file and detect invalid lines before doing other works.
@@ -27,7 +42,7 @@ def analyze(filename):
     :param filename: file to check
     :return: Doesn't return anything yet
     """
-    print("ANALYSING!".center(30, "-"))
+    print("\n" + "ANALYSING!".center(30, "-") + "\n")
     with open(filename, 'r') as file_object:
         total_lines = 0
         valid_lines = 0
@@ -36,13 +51,15 @@ def analyze(filename):
             result = line.strip().split(",")
             if len(result) != 26:
                 print("Not enough answers from student: {}".format(result[0]))
+            elif not check_student_no(result[0]):
+                print("Incorrect student number: {}".format(result[0]))
             else:
                 valid_lines += 1
                 assignments_dict[result[0]] = result[1:]
             total_lines += 1
         if valid_lines == total_lines:
             print("No errors found!")
-        print("REPORT!".center(30, "-"))
+        print("\n" + "REPORTING!".center(30, "-") + "\n")
         print("Total lines of data: {}".format(total_lines))
         print("Total valid lines of data: {}".format(valid_lines))
         print("Total invalid lines of data: {}".format(total_lines - valid_lines))
@@ -51,7 +68,14 @@ def analyze(filename):
 
 # TASK 3
 def grade(assignments_dict):
-    print("GRADING!".center(30, "-"))
+    """
+    Grade the input assignment dictionary
+
+    :param assignments_dict: dict type input, with key = student code,
+    value = answers
+    :return: a dict contains key = student code, value = score
+    """
+    print("\n" + "GRADING!".center(30, "-") + "\n")
     answer_key = "B,A,D,D,C,B,D,A,C,C,D,B,A,B,A,C,B,D,A,C,A,A,B,D,D".strip().split(",")
     for student, result in assignments_dict.items():
         score = 0
@@ -74,16 +98,26 @@ def grade(assignments_dict):
 
 
 # TASK 4
-def write_file(scores_dict,filename):
-    print("EXPORTING RESULTS!".center(30, "-"))
+def write_file(scores_dict, filename):
+    """
+    Writes result scores into a file
+
+    :param scores_dict: dict contains student code and score as key:value
+    :param filename: original name of the file that was used for grading
+    :return:
+    """
+    print("\n" + "EXPORTING RESULTS!".center(30, "-") + "\n")
     filename = filename.replace(".txt","_grades.txt")
     with open(filename,"w+") as file_object:
         for key,value in scores_dict.items():
             file_object.write(key+","+str(value)+"\n")
-    print("Results saved to '{}'".format(filename))
+    print("Results saved to '{}' successfully!".format(filename))
 
 
 def main():
+    """
+    To loop through each class file
+    """
     file = input("Input your filename: ")
     if checkfile(file):
         assignments = analyze(file)
@@ -93,4 +127,5 @@ def main():
 
 while True:
     main()
-    print("RESTARTING!".center(30, "-"))
+    print("\n" + "RESTARTING!".center(30, "-") + "\n")
+
