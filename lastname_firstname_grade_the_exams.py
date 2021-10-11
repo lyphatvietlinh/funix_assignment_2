@@ -73,7 +73,24 @@ def grade(assignments_dict):
     return assignments_dict
 
 
-file = input("Input your filename: ")
-if checkfile(file):
-    assignments = analyze(file)
-    scores = grade(assignments)
+# TASK 4
+def write_file(scores_dict,filename):
+    print("EXPORTING RESULTS!".center(30, "-"))
+    filename = filename.replace(".txt","_grades.txt")
+    with open(filename,"w+") as file_object:
+        for key,value in scores_dict.items():
+            file_object.write(key+","+str(value)+"\n")
+    print("Results saved to '{}'".format(filename))
+
+
+def main():
+    file = input("Input your filename: ")
+    if checkfile(file):
+        assignments = analyze(file)
+        scores = grade(assignments)
+        write_file(scores, file)
+
+
+while True:
+    main()
+    print("RESTARTING!".center(30, "-"))
