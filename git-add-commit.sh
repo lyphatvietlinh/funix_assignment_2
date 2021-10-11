@@ -1,4 +1,5 @@
 git add .
 git status
 git commit -m "Usual commit"
-pause
+read -n1 -p "Press any key to exit."
+exit
