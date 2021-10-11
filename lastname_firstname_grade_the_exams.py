@@ -1,6 +1,8 @@
 # TASK 1
 def checkfile(filename):
     """
+    Checks if the file exists before doing further works.
+
     :param filename: file to check
     :return: boolean on file existence
     """
@@ -19,6 +21,7 @@ def checkfile(filename):
 # This is some changes that was made on the remote repo. Pull before doing local work.
 def analyze(filename):
     """
+    Analyze the file and detect invalid lines before doing other works.
 
     :param filename: file to check
     :return: Doesn't return anything yet
