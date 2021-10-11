@@ -29,6 +29,8 @@ def check_student_no(string):
     """
     if string[0] != "N":
         return False
+    if len(string) != 9:
+        return False
     for char in string[1:]:
         if not char.isdigit():
             return False
