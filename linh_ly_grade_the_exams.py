@@ -52,9 +52,11 @@ def analyze(filename):
         for line in file_object:
             result = line.strip().split(",")
             if len(result) != 26:
-                print("Not enough answers from student: {}".format(result[0]))
+                print("Invalid data - Incorrect number of answers ({})".format(len(result)-1))
+                print(result)
             elif not check_student_no(result[0]):
-                print("Incorrect student number: {}".format(result[0]))
+                print("Invalid data - Incorrect student code")
+                print(result)
             else:
                 valid_lines += 1
                 assignments_dict[result[0]] = result[1:]
@@ -62,9 +64,9 @@ def analyze(filename):
         if valid_lines == total_lines:
             print("No errors found!")
         print("\n" + "REPORTING!".center(30, "-") + "\n")
-        print("Total lines of data: {}".format(total_lines))
-        print("Total valid lines of data: {}".format(valid_lines))
-        print("Total invalid lines of data: {}".format(total_lines - valid_lines))
+        print("Total lines of data:".ljust(30, "-") + " {}".format(total_lines))
+        print("Total valid lines of data:".ljust(30, "-") + " {}".format(valid_lines))
+        print("Total invalid lines of data:".ljust(30, "-") + " {}".format(total_lines - valid_lines))
     return assignments_dict
 
 
@@ -90,12 +92,12 @@ def grade(assignments_dict):
                 score += -1
         assignments_dict[student] = score
     score = np.array(list(assignments_dict.values()))
-    print("{} students graded!".format(len(assignments_dict)))
-    print("Average score: {}".format(score.mean()))
-    print("Highest score: {}".format(score.max()))
-    print("Lowest score: {}".format(score.min()))
-    print("Range of scores: {}".format(score.max() - score.min()))
-    print("Median value: {}".format(np.median(score)))
+    print("Number of students graded:".ljust(30, "-") + " {}".format(len(assignments_dict)))
+    print("Average score:".ljust(30, "-") + " {}".format(score.mean()))
+    print("Highest score:".ljust(30, "-") + " {}".format(score.max()))
+    print("Lowest score:".ljust(30, "-") + " {}".format(score.min()))
+    print("Range of scores:".ljust(30, "-") + " {}".format(score.max() - score.min()))
+    print("Median value:".ljust(30, "-") + " {}".format(np.median(score)))
     return assignments_dict
 
 
@@ -109,10 +111,10 @@ def write_file(scores_dict, filename):
     :return:
     """
     print("\n" + "EXPORTING RESULTS!".center(30, "-") + "\n")
-    filename = filename.replace(".txt","_grades.txt")
-    with open(filename,"w+") as file_object:
-        for key,value in scores_dict.items():
-            file_object.write(key+","+str(value)+"\n")
+    filename = filename.replace(".txt", "_grades.txt")
+    with open(filename, "w+") as file_object:
+        for key, value in scores_dict.items():
+            file_object.write(key + "," + str(value) + "\n")
     print("Results saved to '{}' successfully!".format(filename))
 
 
@@ -130,4 +132,3 @@ def main():
 while True:
     main()
     print("\n" + "RESTARTING!".center(30, "-") + "\n")
-
