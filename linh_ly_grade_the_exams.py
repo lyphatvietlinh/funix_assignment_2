@@ -48,7 +48,7 @@ def analyze(filename: str):
     Analyze the file and detect invalid lines before doing other works.
 
     :param filename: file to check
-    :return: dictionary of student_code:graded_score. Return 0 if every
+    :return: dataframe of valid student code and answers. Return 0 if every
     line is invalid
     """
 	print("\n" + "ANALYSING!".center(30, "-") + "\n")
@@ -85,6 +85,7 @@ def analyze(filename: str):
 			  .format(total_lines - valid_lines))
 
 		if valid_lines == 0:
+			print("No valid data found!")
 			return 0
 		df = pd.DataFrame(assignments_dict)
 		df['Answer'] = answer_key
@@ -98,7 +99,7 @@ def grade(data: pd.DataFrame):
 
     :param data: a dataframe with student code as columns
     value = answers
-    :return: a dataframe contains key = student code, value = score
+    :return: a dataframe contains student code, score
     """
 	print("\n" + "GRADING!".center(30, "-") + "\n")
 
