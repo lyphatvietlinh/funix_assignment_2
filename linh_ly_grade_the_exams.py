@@ -51,26 +51,27 @@ def analyze(filename: str):
     line is invalid
     """
 	print("\n" + "ANALYSING!".center(30, "-") + "\n")
-	# with open(filename, 'r') as file_object:
-	# 	total_lines = 0
-	# 	valid_lines = 0
-	# 	assignments_dict = dict()
-	# 	# Check and validate every line in file for: number of answers,
-	# 	# and student code. Store valid data in a dict with key:value pair
-	# 	# as student:answers
-	# 	for line in file_object:
-	# 		result = line.strip().split(",")
-	# 		if len(result) - 1 != no_of_answers:
-	# 			print("Invalid data - Incorrect number of answers ({})"
-	# 				  .format(len(result) - 1))
-	# 			print(result)
-	# 		elif not check_student_code(result[0]):
-	# 			print("Invalid data - Incorrect student code")
-	# 			print(result)
-	# 		else:
-	# 			valid_lines += 1
-	# 			assignments_dict[result[0]] = result[1:]
-	# 		total_lines += 1
+	with open(filename, 'r') as file_object:
+		total_lines = 0
+		valid_lines = 0
+		assignments_dict = dict()
+
+		# Check and validate every line in file for: number of answers,
+		# and student code. Store valid data in a dict with key:value pair
+		# as student:answers
+		for line in file_object:
+			result = line.strip().split(",")
+			if len(result) - 1 != no_of_answers:
+				print("Invalid data - Incorrect number of answers ({})"
+					  .format(len(result) - 1))
+				print(result)
+			elif not check_student_code(result[0]):
+				print("Invalid data - Incorrect student code")
+				print(result)
+			else:
+				valid_lines += 1
+				assignments_dict[result[0]] = result[1:]
+			total_lines += 1
 
 		if valid_lines == total_lines:
 			print("No errors found!")
@@ -85,39 +86,45 @@ def analyze(filename: str):
 
 		if valid_lines == 0:
 			return 0
-
-	return assignments_dict
+		df = pd.DataFrame(assignments_dict)
+		df['Answer'] = answer_key
+	return df
 
 
 # TASK 3
-def grade(assignments_dict: dict):
+def grade(data: pd.DataFrame):
 	"""
     Grade the input assignment dictionary
 
-    :param assignments_dict: dict type input, with key = student code,
+    :param data: a dataframe with student code as columns
     value = answers
-    :return: a dict contains key = student code, value = score
+    :return: a dataframe contains key = student code, value = score
     """
 	print("\n" + "GRADING!".center(30, "-") + "\n")
 
 	# Loop through every student:answers pair in the dict, compare with
 	# answer_key for grading, then replace the answers in the dict with
 	# the graded score
-	for student, result in assignments_dict.items():
+	result = []
+	for column in data.columns[:-1]:
 		score = 0
-		for i in range(len(result)):
-			if result[i] == answer_key[i]:
+		for i in range(len(data[column])):
+			if data[column][i] == data['Answer'][i]:
 				score += 4
-			elif result[i] == "":
-				pass
+			elif data[column][i] == "":
+				continue
 			else:
 				score += -1
-		assignments_dict[student] = score
+		result.append(score)
+
+	df = pd.DataFrame()
+	df['Student'] = data.columns[:-1]
+	df['Score'] = result
 
 	# Outputting statistic report
-	score = np.array(list(assignments_dict.values()))
+	score = np.array(result[:-1])
 	print("Number of students graded:".ljust(30, "-")
-		  + " {}".format(len(assignments_dict)))
+		  + " {}".format(len(result)))
 	print("Average score:".ljust(30, "-")
 		  + " {:.2f}".format(score.mean()))
 	print("Highest score:".ljust(30, "-")
@@ -130,32 +137,27 @@ def grade(assignments_dict: dict):
 		  + " {:.2f}".format(np.median(score)))
 
 	# Return the dict with student:score pairs
-	return assignments_dict
+	return df
 
 
 # TASK 4
-def write_file(scores_dict: dict, filename: str):
+def write_file(data: pd.DataFrame, filename: str):
 	"""
     Writes result scores into a file
 
-    :param scores_dict: dict contains student code and score as key:value
+    :param data: dataframe contains student code and score as key:value
     :param filename: original name of the file that was used for grading
     """
 	print("\n" + "EXPORTING RESULTS!".center(30, "-") + "\n")
 	filename = filename.replace(".txt", "_grades.txt")
-	with open(filename, "w+") as file_object:
-		for key, value in scores_dict.items():
-			file_object.write(key + "," + str(value) + "\n")
+	data.to_csv(filename, index=False, header=False)
 	print("Results saved to '{}' successfully!".format(filename))
 
 
 while True:
 	file = input("Input your filename: ")
 	if check_file(file):
-		assignments = analyze(file)
-		if assignments:
-			scores = grade(assignments)
-			write_file(scores, file)
-		else:
-			print("No valid line to grade!")
+		file_data = analyze(file)
+		file_result = grade(file_data)
+		write_file(file_result, file)
 	print("\n" + "RESTARTING!".center(30, "-") + "\n")
