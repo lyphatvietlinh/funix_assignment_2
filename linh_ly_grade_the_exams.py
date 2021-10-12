@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 
+# Setting the answer keys
 answer_key = "B,A,D,D,C,B,D,A,C,C,D,B,A,B,A,C,B,D,A,C,A,A,B,D,D" \
 	.strip().split(",")
 no_of_answers = len(answer_key)
@@ -57,8 +58,7 @@ def analyze(filename: str):
 		assignments_dict = dict()
 
 		# Check and validate every line in file for: number of answers,
-		# and student code. Store valid data in a dict with key:value pair
-		# as student:answers
+		# and student code. Store valid data in a dataframe
 		for line in file_object:
 			result = line.strip().split(",")
 			if len(result) - 1 != no_of_answers:
@@ -102,9 +102,7 @@ def grade(data: pd.DataFrame):
     """
 	print("\n" + "GRADING!".center(30, "-") + "\n")
 
-	# Loop through every student:answers pair in the dict, compare with
-	# answer_key for grading, then replace the answers in the dict with
-	# the graded score
+	# Grade the score for each student
 	result = []
 	for column in data.columns[:-1]:
 		score = 0
@@ -117,12 +115,13 @@ def grade(data: pd.DataFrame):
 				score += -1
 		result.append(score)
 
+	# Construct new dataframe with student code and score.
 	df = pd.DataFrame()
 	df['Student'] = data.columns[:-1]
 	df['Score'] = result
 
 	# Outputting statistic report
-	score = np.array(result[:-1])
+	score = np.array(result)
 	print("Number of students graded:".ljust(30, "-")
 		  + " {}".format(len(result)))
 	print("Average score:".ljust(30, "-")
