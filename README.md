@@ -1,5 +1,6 @@
 # Introduction
-This is a simple project for automated student's test answers, and output the scores in a text file.
+This is a simple project for automated grading student's test answers, and output the scores in a text file.
+
 # Instruction
 When run, the program will ask for a filename input, to start grading. The input file should be stored in the same directory with the source code file.
 

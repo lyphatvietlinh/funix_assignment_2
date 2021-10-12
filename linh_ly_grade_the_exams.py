@@ -1,7 +1,5 @@
-# --------------------------------------------------------------------
-# FUNIX ASSIGNMENT 2
-# --------------------------------------------------------------------
 import numpy as np
+import pandas as pd
 
 answer_key = "B,A,D,D,C,B,D,A,C,C,D,B,A,B,A,C,B,D,A,C,A,A,B,D,D" \
 	.strip().split(",")
@@ -53,27 +51,26 @@ def analyze(filename: str):
     line is invalid
     """
 	print("\n" + "ANALYSING!".center(30, "-") + "\n")
-	with open(filename, 'r') as file_object:
-		total_lines = 0
-		valid_lines = 0
-		assignments_dict = dict()
-
-		# Check and validate every line in file for: number of answers,
-		# and student code. Store valid data in a dict with key:value pair
-		# as student:answers
-		for line in file_object:
-			result = line.strip().split(",")
-			if len(result) - 1 != no_of_answers:
-				print("Invalid data - Incorrect number of answers ({})"
-					  .format(len(result) - 1))
-				print(result)
-			elif not check_student_code(result[0]):
-				print("Invalid data - Incorrect student code")
-				print(result)
-			else:
-				valid_lines += 1
-				assignments_dict[result[0]] = result[1:]
-			total_lines += 1
+	# with open(filename, 'r') as file_object:
+	# 	total_lines = 0
+	# 	valid_lines = 0
+	# 	assignments_dict = dict()
+	# 	# Check and validate every line in file for: number of answers,
+	# 	# and student code. Store valid data in a dict with key:value pair
+	# 	# as student:answers
+	# 	for line in file_object:
+	# 		result = line.strip().split(",")
+	# 		if len(result) - 1 != no_of_answers:
+	# 			print("Invalid data - Incorrect number of answers ({})"
+	# 				  .format(len(result) - 1))
+	# 			print(result)
+	# 		elif not check_student_code(result[0]):
+	# 			print("Invalid data - Incorrect student code")
+	# 			print(result)
+	# 		else:
+	# 			valid_lines += 1
+	# 			assignments_dict[result[0]] = result[1:]
+	# 		total_lines += 1
 
 		if valid_lines == total_lines:
 			print("No errors found!")
